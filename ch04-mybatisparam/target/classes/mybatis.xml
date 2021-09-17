@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <typeAliases>
+        <!--
+        此处可以指定一个类型的一个自定义别名
+        type是指定类型的全限定名称
+        alias 别名，短小易于记忆
+        一行定义一个
+        -->
+        <typeAlias type="com.reiuy.entity.Student" alias="stu"/>
+
+
+
+        <!--
+        有第二种方式
+        <package> name是包名，这个包中的所有类，类名就是别名（类名不分大小写）
+        如下这种情况时，vo下的QueryParam类的别名就变成了QueryParam、
+        一般采用这种方式，较为简单
+        -->
+        <package name="com.reiuy.vo"/>
+    </typeAliases>
+
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/springdb?useSSL=false&amp;serverTimezone=UTC"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123123"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--填写sql mapper（sql映射文件）的位置-->
+        <!--例如com/reiuy/dao/xxxDao.xml-->
+        <mapper resource="com/reiuy/dao/StudentDao.xml"/>
+    </mappers>
+</configuration>

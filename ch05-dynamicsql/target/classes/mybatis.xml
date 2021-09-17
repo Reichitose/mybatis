@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--指定properties的路径，从类路径根开始-->
+    <properties resource="jdbc.properties"/>
+
+
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <typeAliases>
+        <!--
+        此处可以指定一个类型的一个自定义别名
+        type是指定类型的全限定名称
+        alias 别名，短小易于记忆
+        一行定义一个
+        -->
+        <typeAlias type="com.reiuy.entity.Student" alias="stu"/>
+
+
+
+        <!--
+        有第二种方式
+        <package> name是包名，这个包中的所有类，类名就是别名（类名不分大小写）
+        如下这种情况时，vo下的QueryParam类的别名就变成了QueryParam、
+        一般采用这种方式，较为简单
+        -->
+        <package name="com.reiuy.vo"/>
+    </typeAliases>
+    
+    <!--添加pagehelper插件-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"/>
+    </plugins>
+
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--填写sql mapper（sql映射文件）的位置-->
+        <!--例如com/reiuy/dao/xxxDao.xml-->
+        <mapper resource="com/reiuy/dao/StudentDao.xml"/>
+
+        <!--
+        利用包名指定多个mapper文件
+        name：mapper文件xml文件所在的包名
+        这个包中所有的xml文件一次全部加载给mybatis
+        使用package的要求
+        1.mapper文件名称需要和接口名称一样，大小写严格
+        2.mapper文件和dao的接口需要在统一目录（dao和dao的xml在一个目录下）
+        -->
+        <!--每次只能指定一个映射文件，不能对同一个映射文件即进行resource加载又进行package加载，会报错-->
+        <!--<package name="com.reiuy.dao"/>-->
+
+    </mappers>
+</configuration>

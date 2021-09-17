@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间，格式：com.reiuy.dao.XxxDao-->
+<mapper namespace="com.reiuy.dao.StudentDao">
+    <!--id 需要执行的sql语句的唯一表示,要求使用接口中的方法名 例如selectStudents-->
+    <!--resultType 只有select语句中有，指定返回值的类型的全限定名名称 例如 com.reiuy.domain.Student，这个类型是完全任意的-->
+
+    <!--
+    parameterType表示参数是一个整型值
+    表示的是dao接口中方法参数的数据类型，值是java中数据类型全限定名称或者是mybatis定义的别名
+    parameterType="java.lang.Integer"
+    parameterType="int"
+    都是可以的
+
+    注意：parameterType不是强制的，因为mybatis反射机制能发现接口参数的类型，所以可以没有，一般也不写
+    -->
+    <!--此处就可以使用Student的别名stu作为resultType了-->
+    <select id="selectStudentById" parameterType="java.lang.Integer" resultType="com.reiuy.entity.Student">
+        SELECT * FROM student WHERE id=#{id}
+    </select>
+    
+    <!--多个参数采用@param命名-->
+    <select id="selectMulitParam"  resultType="com.reiuy.entity.Student">
+        SELECT * FROM student WHERE name=#{myname} or age=#{myage}
+    </select>
+
+    <!--
+        多个参数，采用java对象的属性值作为参数的实际值
+        利用对象的属性值作为参数时格式为
+        #{属性名,javaType=java内数据类型全限定名称，jdbcType=数据库数据类型}
+        这是完整格式，很少用
+        javaType 指java中的属性数据类型
+        jdbcType 指数据库中的数据类型
+        例如
+        #{paraName,javaType="java.lang.String",jdbcType="VARCHAR"}
+
+        上述的语法一般不用，我们使用简化方式
+        #{属性名}，其他的依靠反射获取
+    -->
+<!--    <select id="selectMultiObject" resultType="com.reiuy.entity.Student">-->
+<!--        SELECT * FROM student WHERE name=#{paraName,javaType="java.lang.String",jdbcType="VARCHAR"}-->
+<!--        or age=#{paraAge,javaType="java.lang.Integer",jdbcType="INTEGER"}-->
+<!--    </select>-->
+
+    <select id="selectMultiObject" resultType="com.reiuy.entity.Student">
+        select * from student where name=#{paramName} or age=#{paramAge}
+    </select>
+
+    <select id="selectStudentsuse$" resultType="com.reiuy.entity.Student">
+        select * from student order by ${colName}
+        <!--利用$将列名拼接-->
+    </select>
+
+
+
+    <!--使用resultmap
+        1.先定义resultMap
+        id是自定义的名称，表示这个resultMap
+        type是java类型的全限定名称
+        2.在标签中引用
+    -->
+    <resultMap id="StudentMap" type="com.reiuy.entity.Student">
+        <!--
+        定义列名和java属性的关系
+        主键列使用id标签
+        col列名
+        projava类型的属性名
+        -->
+        <id column="id" property="id"/>
+        <!--非主键列使用result标签-->
+        <result column="name" property="name"/>
+    </resultMap>
+    <select id="selectAllStus" resultMap="StudentMap">
+    <!--此处映射关系就变成了StudentMap所定义的映射关系,这种关系是可以复用的，每次指定即可-->
+        select * from student
+    </select>
+    <!--也可以通过在sql语句中加as的方式实现
+        select name as stuname from student
+        这样返回结果时就可以定义了
+    -->
+
+    <!--第一种，在java中指定like后内容-->
+    <select id="selecLikeOne" resultType="com.reiuy.entity.Student">
+        select * from student where name like #{like_name}
+    </select>
+</mapper>

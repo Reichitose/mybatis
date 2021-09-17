@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间，格式：com.reiuy.dao.XxxDao-->
+<mapper namespace="com.reiuy.dao.StudentDao">
+
+        <!--
+            if
+            <if test="使用java对象的属性值作为判断条件，语法是属性名和某某值的关系">
+        -->
+        <select id="selectStudentIf" resultType="com.reiuy.entity.Student">
+            select * from student
+            where
+            <if test="name != null and name!=''">
+                name = #{name}
+            </if>
+            <if test="age>0">
+                or age > #{age}
+            </if>
+        </select>
+
+
+        <!--where里包含着多个if-->
+        <select id="selectStudentWhere" resultType="com.reiuy.entity.Student">
+            select * from student
+                <where>
+                <if test="name != null and name!=''">
+                 name = #{name}
+                </if>
+                <if test="age>0">
+                    or age > #{age}
+                </if>
+            </where>
+        </select>
+
+
+
+    <!--foreach使用1-->
+    <select id="selectStudentForeach1" resultType="com.reiuy.entity.Student">
+        select * from student where id in
+        <!--
+            collection 表示接口中方法参数的类型，数组使用array list集合使用list
+            item 自定义的，表示数组和集合成员的变量
+            open 循环开始时的字符
+            close 循环结束时的字符
+            separator 成员之间的分割字符
+        -->
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <select id="selectStudentForeach2" resultType="com.reiuy.entity.Student">
+        select * from student where id in 
+        <foreach collection="list" item="stu" open="(" close=")" separator=",">
+            #{stu.id}
+        </foreach>
+    </select>
+
+    <select id="selectAllwithph" resultType="com.reiuy.entity.Student">
+        select * from student order by id
+    </select>
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--settings用来控制mybatis全局行为-->
+    <settings>
+        <!--设置mybatis输出日志，value的stdout_logging是指把日志打到控制台上-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+
+    <!--环境配置，数据库的连接信息
+         default必须和某个environment的id一致
+         用来规定默认访问哪个数据库
+         environment标签规定的数据库连接配置可以有多个
+    -->
+    <environments default="development">
+
+        <!--environment:环境，一个数据库信息的配置
+            id是一个唯一值，是自定义的，用以表示环境的名称
+        -->
+        <environment id="development">
+
+            <!--mybatis的事务类型，分为JDBC的Connection对象的commit和rollback进行事务处理-->
+            <transactionManager type="JDBC"/>
+            <!--dataSource表示数据源，用来连接数据库的
+                type表示数据源的类型，POOLED表示使用连接池
+            -->
+            <dataSource type="POOLED">
+                <!--
+                    driver,user,username,password是固定的，不可自定义
+                -->
+                <!--驱动类名-->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <!--连接数据库的url字符串-->
+                <property name="url" value="jdbc:mysql://localhost:3306/springdb?useSSL=false&amp;serverTimezone=UTC"/>
+                <!--访问数据库的用户名-->
+                <property name="username" value="root"/>
+                <!--访问数据库的密码-->
+                <property name="password" value="123123"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+
+
+    <!--sql mapper(sql映射文件)的位置-->
+    <mappers>
+        <!--一个mapper标签制定一个文件的位置
+           从类路径开始的路径信息
+           target/classes(类路径)例如com.reiuy.dao.xxx.xml
+           可以通过多个mapper标签指定多个映射文件
+        -->
+        <mapper resource="com\reiuy\dao\StudentDao.xml"/>
+    </mappers>
+</configuration>
+
+
+<!--
+    这是mybatis的主配置文件：主要定义了数据库的配置信息，和sql映射文件的位置
+
+    1.约束文件
+    <!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+        mybatis-3-config.dtd 约束文件的名称
+    2.<configuration></configuration>
+        这是根标签，表示各种配置信息
+
+-->
